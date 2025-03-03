@@ -8,7 +8,9 @@ class NoteTakingHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<NoteTakingProvider>().fetchNotes();
     final userNotes = context.watch<NoteTakingProvider>().getNotes;
+    final provider = context.read<NoteTakingProvider>();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange,
@@ -18,10 +20,13 @@ class NoteTakingHomePage extends StatelessWidget {
           itemCount: userNotes.length,
           itemBuilder: (BuildContext ctx, int index) {
             return ListTile(
-              title: Text(userNotes[index]['title']),
-              subtitle: Text(userNotes[index]['content']),
-              trailing:
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.delete)),
+              title: Text(userNotes[index].title),
+              subtitle: Text(userNotes[index].content),
+              trailing: IconButton(
+                  onPressed: () {
+                    provider.deleteNote(userNotes[index]);
+                  },
+                  icon: const Icon(Icons.delete)),
             );
           }),
       floatingActionButton: FloatingActionButton(
