@@ -3,17 +3,22 @@ import 'package:provider/provider.dart';
 import 'package:provider_lesson/note_taking/provider/note_taking_provider.dart';
 
 class AddNote extends StatelessWidget {
-  const AddNote({super.key});
+  const AddNote({super.key, required this.isEdit, this.id});
+
+  final bool isEdit;
+  final String? id;
 
   @override
   Widget build(BuildContext context) {
     final provider = context.read<NoteTakingProvider>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Note"),
+        title: Text(isEdit == true ? "Edit Note" : "Add Note"),
         actions: [
           IconButton(
-              onPressed: provider.addNotes,
+              onPressed: () {
+                isEdit ? provider.updateNote(id) : provider.addNotes();
+              },
               icon: const Icon(
                 Icons.check,
                 size: 30,

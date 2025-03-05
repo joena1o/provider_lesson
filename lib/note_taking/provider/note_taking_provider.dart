@@ -5,10 +5,21 @@ import 'package:provider_lesson/note_taking/models/note_class.dart';
 class NoteTakingProvider extends ChangeNotifier {
   List<Note> _notes = [];
   List<Note> get getNotes => _notes;
-  DatabaseHelper _databaseHelper = DatabaseHelper();
+  final DatabaseHelper _databaseHelper = DatabaseHelper();
 
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
+
+  void clearTextField() {
+    titleController.clear();
+    contentController.clear();
+  }
+
+  void setTheNoteValuesToTextField(Note noteData) {
+    titleController.text = noteData.title;
+    contentController.text = noteData.content;
+    notifyListeners();
+  }
 
   void fetchNotes() async {
     final notesAsMaps = await _databaseHelper.fetchNotes();
@@ -27,7 +38,14 @@ class NoteTakingProvider extends ChangeNotifier {
   }
 
   void deleteNote(Note noteData) {
-    _notes.removeWhere((note) => note.id == noteData.id);
+    _databaseHelper.deleteNote(noteData.id);
     notifyListeners();
+  }
+
+  void updateNote(String? id) {
+    if (id != null) {
+      _databaseHelper.updateNote(
+          id, titleController.text, contentController.text);
+    }
   }
 }

@@ -34,4 +34,17 @@ class DatabaseHelper {
     Database database = await databaseInstance();
     return await database.query('notes');
   }
+
+  Future<int> deleteNote(String id) async {
+    Database database = await databaseInstance();
+    return await database.delete('notes', where: "id=?", whereArgs: [id]);
+  }
+
+  Future<int> updateNote(String id, String title, String content) async {
+    Database database = await databaseInstance();
+    int updateResponse = await database.update(
+        'notes', {"title": title, "content": content},
+        where: "id=?", whereArgs: [id]);
+    return updateResponse;
+  }
 }
